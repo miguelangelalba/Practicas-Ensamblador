@@ -1,0 +1,6 @@
+practica2 
+
+apartado b 
+
+-Alamcenamiento de los caracteres --> se han almacenado el li
+-Cúantas palabras son necesarias para almacenar la cadena? --> 3 palabras y un byte
