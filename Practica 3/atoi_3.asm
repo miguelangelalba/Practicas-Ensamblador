@@ -12,7 +12,6 @@ sign:	.word 1
 	# -- S2 Va ser donde voy a guardar el signo de multiplicación
 	# -- T1 va a ser un numero temporal auxiliar "nextChar"
 	# -- T2 Es el registro con en el cual voy a guardar el valor \n para compararlo
-	# -- T3 Variable para ver el valor de hi y suma
 	
 	
 
@@ -55,19 +54,10 @@ next:
 	bgt $t1,57,Fin #Si el caracter introducido es mayor que 57
 	blt $t1,48,Fin #Si el caracter intruducido es menor a 48 significa que no es un número por lo que termina la ejecución
 	
-	#mul $s1, $s1, 10
-	li $t3,10
-	multu $s1,$t3
-	#En esta función voy a ver que hi sea diferente de 0 si es distinto de 0 terminará de calcular
-	#mflo $s1
-	mfhi $t3 #sobreescribo registro 3 pero no pasa nada
-	bne $t3,0 Fin
-	mflo $s1 #Alamaceno despues de la comprobación paraque no me lo imprima mal
-	
+	mul $s1, $s1, 10
 	sub $t1 ,$t1 , 48
 
 	add $s1 ,$s1 , $t1
-	blt $t1,0,Fin #Si el caracter intruducido es menor a 48 significa que no es un número por lo que termina la ejecución
 	
 	move $a0, $s1
 	li $v0, 1
