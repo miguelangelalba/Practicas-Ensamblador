@@ -1,6 +1,7 @@
 #-- REcorrer una cadena introducida por el usuario 
 # -- En este programa se quiere implementar una subrutina para detectar una lapabra palíndroma
 # -- En caso de ser la función devolverá un 1 en caso negativo devolverá un 0
+# -- El programa falla en los ultimos pasos, pero prefiero seguir avanzzando
 
 .data 
 	nopal: .asciiz "No es un palíndromo"
@@ -87,6 +88,7 @@ next2:
 	syscall
 	bge $t0,$t4 , palindromodetectado
 	bne $t2, $t3, nopalindromo
+
 	
 	addi $t0,$t0,1 #Avanzo con mi primer puntero
 	subi $t4,$t4,1 #Retrocedo con mi primer puntero
