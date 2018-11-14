@@ -29,9 +29,9 @@ main:
 		#Aprovecho que el valor qeu  lte tengoque pasar a la subrutina está en a0
 		jal primo #Le paso el puntero con la palabra para que la subrutina palindormo detecte y devuelva --> 1 / 0
 		beq $s0,99,fin
-		addi $s0,$s0,1
 		move $s2,$v0
 		beq $s2,1,imprimirprimo
+		addi $s0,$s0,1
 	b loop
 	
 imprimirprimo:
@@ -41,6 +41,7 @@ imprimirprimo:
 	la $a0 ,salta
 	li $v0 , 4
 	syscall
+	addi $s0,$s0,1
 	b loop
 
 fin:
@@ -55,14 +56,14 @@ primo:
 	loop2:
 		div $t0,$t2
 		mfhi $t3
-		beq $t2,9,resultadoprimo
+		beq $t2,99,resultadoprimo
 		beqz $t3,suma
 		addi $t2,$t2,1
 		
 	b loop2
 	
 resultadoprimo:
-	beq $t1,1 esprimo
+	beq $t1,2, esprimo
 	#No es primo
 	li $v0, 0
 	jr $ra
