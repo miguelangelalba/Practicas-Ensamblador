@@ -44,12 +44,45 @@ main:
 #	- finish
 #	- extra
 
+# Registros utilzados para la subrutiina:
+	# - $t0 --> n-1
 hanoi:
 
 #Esqueleto 
 
+	bgez $a0,continua
+
+#Creación de pila:
+#Guardo todos los argumentos que he considerado necesario en la pila
+
+	subu $sp, $sp, 32 # Stack frame is 32 bytes long
+	sw $ra, 20($sp) # Save return address
+	sw $fp, 16($sp) # Save frame pointer
+	addiu $fp, $sp, 28 # Inicializo el puntero
+	sw $a0, 0($fp) # Guardo el argumento (n "a1")
+	sw $a1, 4($fp) # Guardo el argumento (a2)
+	sw $a2, 8($fp) # Guardo el argumento (a3)
+	sw $a3, 12($fp) # Guardo el argumento (a4)
+## Fin de la creación de la pila
+#Aún puedo jugar con los argumentos
+	subi $a0,$a0,1
+	jal hanoi
+	#A partir de aquí tengo que hacer llamadas a la pila
+	
+	#Imprimir movimiento 
+	la $a0 , mueve_disco
+	li $v0 , 4
+	syscall
+	#Imprimir n
+	lw $a0,0($fp)
+	li $v0 , 1
+	syscall
+	#Imprimir from
+
 #Si es n = 0
 
+
+continua:
 
 
 
