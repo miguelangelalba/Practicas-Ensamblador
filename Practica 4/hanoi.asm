@@ -6,9 +6,11 @@
 
 .data
 	num: .space 1024
-	mueve_disco: .asciiz "Move disk"
-	palo_inicio: .asciiz "from peg"
-	palo_fin: .asciiz "to peg"
+	mueve_disco: .asciiz " Move disk "
+	palo_inicio: .asciiz " from peg "
+	palo_fin: .asciiz " to peg "
+	salta: .asciiz "\n"
+	fin: .asciiz " Fin del programa "
 	introduce: .asciiz "Introduce el número de discos (1-8)"
 .text
 
@@ -35,8 +37,14 @@ main:
 	li $a3,3
 	jal hanoi
 	
-
-
+	
+#-- Imprime el mesnsaje inicial
+	la $a0 , fin
+	li $v0 , 4
+	syscall	
+	li $v0,10
+	syscall
+		
 #Hanoi
 # - A esta rutina se le pasa 4 argumentos:
 #	- n
@@ -50,11 +58,12 @@ hanoi:
 
 #Esqueleto 
 
-	bgez $a0,continua
-
-#Creación de pila:
-#Guardo todos los argumentos que he considerado necesario en la pila
-
+	bne $a0,0,hanoi_recursivo ## voy a janoi recursivo paracrear pila y quitar valores
+	jr $ra
+	
+hanoi_recursivo:
+	#Creo pila guardo los argumentos en la pila
+	
 	subu $sp, $sp, 32 # Stack frame is 32 bytes long
 	sw $ra, 20($sp) # Save return address
 	sw $fp, 16($sp) # Save frame pointer
@@ -63,27 +72,57 @@ hanoi:
 	sw $a1, 4($fp) # Guardo el argumento (a2)
 	sw $a2, 8($fp) # Guardo el argumento (a3)
 	sw $a3, 12($fp) # Guardo el argumento (a4)
-## Fin de la creación de la pila
-#Aún puedo jugar con los argumentos
-	subi $a0,$a0,1
-	jal hanoi
-	#A partir de aquí tengo que hacer llamadas a la pila
 	
+	subi $a0, $a0, 1
+	
+	jal hanoi
+	
+		
 	#Imprimir movimiento 
 	la $a0 , mueve_disco
 	li $v0 , 4
 	syscall
+	#Saco el fp con el sp ya que así lo estipula el convenio
+	lw $fp,16($sp)
 	#Imprimir n
 	lw $a0,0($fp)
 	li $v0 , 1
 	syscall
 	#Imprimir from
-
-#Si es n = 0
-
-
-continua:
-
-
-
-
+	la $a0 , palo_inicio
+	li $v0 , 4
+	syscall
+	#Imprimir el número inicio
+	lw $a0,4($fp)
+	li $v0 , 1
+	syscall
+		
+	#Imprimir fin movimiento 
+	la $a0 , palo_fin
+	li $v0 , 4
+	syscall
+	
+	#Imprimir el número fin
+	lw $a0,12($fp)
+	li $v0 , 1
+	syscall
+	
+	#Imprimir salto de linea
+	la $a0 ,salta
+	li $v0 , 4
+	syscall	
+	
+	#Paso los argumentos en el orden que pide el algoritmo
+	lw $a0,0($fp)
+	lw $a1,8($fp)
+	lw $a2,12($fp)
+	lw $a3,4($fp)
+	
+	subi $a0, $a0, 1
+	jal hanoi
+	
+	# "Borro pila" 
+	lw $ra, 20($sp)
+	lw $fp, 16($sp)
+	addiu $sp, $sp, 32
+	jr $ra
