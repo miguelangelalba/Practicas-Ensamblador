@@ -65,9 +65,9 @@ hanoi_recursivo:
 	#Creo pila guardo los argumentos en la pila
 	
 	subu $sp, $sp, 32 # Stack frame is 32 bytes long
-	sw $ra, 20($sp) # Save return address
-	sw $fp, 16($sp) # Save frame pointer
-	addiu $fp, $sp, 28 # Inicializo el puntero
+	sw $ra, 8($sp) # Save return address
+	sw $fp, 12($sp) # Save frame pointer
+	addiu $fp, $sp, 16 # Inicializo el puntero
 	sw $a0, 0($fp) # Guardo el argumento (n "a1")
 	sw $a1, 4($fp) # Guardo el argumento (a2)
 	sw $a2, 8($fp) # Guardo el argumento (a3)
@@ -76,14 +76,13 @@ hanoi_recursivo:
 	subi $a0, $a0, 1
 	
 	jal hanoi
-	
-		
+			
 	#Imprimir movimiento 
 	la $a0 , mueve_disco
 	li $v0 , 4
 	syscall
 	#Saco el fp con el sp ya que así lo estipula el convenio
-	lw $fp,16($sp)
+	#lw $fp,12($sp)
 	#Imprimir n
 	lw $a0,0($fp)
 	li $v0 , 1
@@ -121,8 +120,8 @@ hanoi_recursivo:
 	subi $a0, $a0, 1
 	jal hanoi
 	
-	# "Borro pila" 
-	lw $ra, 20($sp)
-	lw $fp, 16($sp)
+	# "Borro pila" y dejo como etaba el fp y el ra para que en la siguiente itereación lo tenga y pueda continuar el programa
+	lw $ra, 8($sp)
+	lw $fp, 12($sp)
 	addiu $sp, $sp, 32
 	jr $ra
