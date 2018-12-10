@@ -1,0 +1,4 @@
+Apuntes Practica 5.
+
+create node --> devuelve la dirección del nodo creado
+tree_insert --> Inserta el nodo en el arbol
