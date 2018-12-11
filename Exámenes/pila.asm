@@ -90,14 +90,58 @@ node_t_push:
 	
 	jr $ra
 	
-	
-
 #Función borrar nodo
-	#A esta función se le tendrá que pasar el nodo que se quiere borrar y el comienzo de la lista
+	#A esta función se le tendrá que pasar el valor que se quiere borrar y el comienzo de la lista
+node_t_remove:
+	#La cima de la lsita la tengo que ignorar
+	#a0 --> Puntero Nodo 
+	#a1 --> Valor que quiero borrar
+	#$t0 --> Dirección de nodo quequiero borrar
+	#$t1 --> guaradaré el valor de la dirección anteriro (Valor AUX)
+	lw $t0 , 4($a0)
+	move $t1 , $a0
+	while2:
+		#t5
+		#t6 son variables auxiliares para hacer la comparación
+		lw $t5 ,  4($t0)
+		lw $t6 , 0($t0)
+		#beqz $t5,null
+		beq $a1 , $t6, break_borrar_nodo
+		beqz $t5,null
+		lw $t1, 4($t1)# Actualizao el valor aux para que siempre valla una dirección por detrás
+		lw $t0, 4($t0) # actualizo el valor de t0 con la siguiente dirección para ir iterando
+
+	b while2 
+break_borrar_nodo:
+	lw $t3,4($t0) # guardo la dirección del next
+	sw $t3,4($t1) # Meto la dirección next del quevoy a borrar
+	move $v0 , $t0 # Muevo el reusltado antes de borrar el nodo
+	#Borro el nodo
+	li $t4 , 0 # En este registro preparo el valor 0 para borrar el nodo
+	sw $t4, 0($t0)
+	sw $t4, 4($t0)
+	jr $ra
+null:
+	li $v0,0
+	jr $ra
 #función node print
-node_t_print:
+#node_t_print:
 	
 fin:
 	 # Con esta función termino el programa ya que el usuario a introducido un 0
+	li $v0, 5
+	syscall
+	move $a0, $s0
+	move $a1, $v0
+	
+	jal node_t_remove
+	
+	move $s0, $v0 #De esta manera almaceno el puntero del inicio de la memoria
+	
+	#prin para ver si se está haciendo bien el salvado de la memoria
+	move $a0, $s0
+	li $v0,1
+	syscall
+		
 	li $v0,10
 	syscall
